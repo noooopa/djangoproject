@@ -49,11 +49,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "djongo",
-        "NAME": "mydb",
+        "NAME": "dbase",
         "CLIENT": {
             "host": "localhost",
             "port": 27017,
-            "username": "myo",
+            "username": "myo123",
             "password": "1234",
             "authSource": "admin",
         },
