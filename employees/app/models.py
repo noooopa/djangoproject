@@ -11,7 +11,7 @@ class Employee(models.Model):
     pay = models.IntegerField()
 
     class Meta:
-        db_table = 'employee'
+        db_table = 'employees'
 
     def __str__(self):
         return self.name
