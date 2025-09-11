@@ -45,20 +45,33 @@ TEMPLATES = [{
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# ===== MongoDB (Djongo) =====
+# ===== awsDB (Postgres) =====
 DATABASES = {
     "default": {
-        "ENGINE": "djongo",
-        "NAME": "dbase",
-        "CLIENT": {
-            "host": "localhost",
-            "port": 27017,
-            "username": "myo123",
-            "password": "1234",
-            "authSource": "admin",
-        },
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mydb",
+        "USER": "myo",
+        "PASSWORD": "1234",
+        "HOST": "43.201.27.175",
+        "PORT": "5432",  # PostgreSQL 기본 포트
     }
 }
+
+# # ===== MongoDB (Djongo) =====
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "djongo",
+#         "NAME": "dbase",
+#         "CLIENT": {
+#             "host": "localhost",
+#             "port": 27017,
+#             "username": "myo123",
+#             "password": "1234",
+#             "authSource": "admin",
+#         },
+#     }
+# }
+
 # Atlas 사용 시 (위 대신)
 # DATABASES = {
 #     "default": {
