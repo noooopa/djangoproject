@@ -6,7 +6,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-only")
 DEBUG = True
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*"] if os.getenv("DJANGO_ALLOWED_HOSTS") == "*" else os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
+
 
 INSTALLED_APPS = [
     "django.contrib.admin","django.contrib.auth","django.contrib.contenttypes",
@@ -45,32 +46,43 @@ TEMPLATES = [{
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# ===== awsDB (Postgres) =====
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "mydb",
-        "USER": "myo",
-        "PASSWORD": "1234",
-        "HOST": "43.201.27.175",
-        "PORT": "5432",  # PostgreSQL 기본 포트
-    }
-}
-
-# # ===== MongoDB (Djongo) =====
 # DATABASES = {
 #     "default": {
-#         "ENGINE": "djongo",
-#         "NAME": "dbase",
-#         "CLIENT": {
-#             "host": "localhost",
-#             "port": 27017,
-#             "username": "myo123",
-#             "password": "1234",
-#             "authSource": "admin",
-#         },
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("POSTGRES_DB"),
+#         "USER": os.getenv("POSTGRES_USER"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+#         "HOST": os.getenv("DB_HOST", "my_postgres_db"),
+#         "PORT": os.getenv("DB_PORT", "5432"),
 #     }
 # }
+
+# ===== awsDB (Postgres) =====
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "mydb",
+#         "USER": "myo",
+#         "PASSWORD": "1234",
+#         "HOST": "43.201.27.175",
+#         "PORT": "5432",  # PostgreSQL 기본 포트
+#     }
+# }
+
+# # ===== MongoDB (Djongo) =====
+DATABASES = {
+    "default": {
+        "ENGINE": "djongo",
+        "NAME": os.getenv("MONGOD_DB"),
+        "CLIENT": {
+            "host": "localhost",
+            "port": 27017,
+            "username": os.getenv("MONGOD_USER"),
+            "password": os.getenv("MONGOD_PASSWORD"),
+            "authSource": "admin",
+        },
+    }
+}
 
 # Atlas 사용 시 (위 대신)
 # DATABASES = {
@@ -105,11 +117,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ===== CORS =====
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:5173",  # Vite
-    "http://127.0.0.1:5173",
-]
+raw_cors = os.getenv("CORS_ALLOWED_ORIGINS", "")
+CORS_ALLOWED_ORIGINS = [c.strip() for c in raw_cors.split(",") if c.strip()]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ["*"]
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
