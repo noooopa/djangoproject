@@ -46,6 +46,7 @@ TEMPLATES = [{
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+# ===== PostgreSQL =====
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
@@ -57,43 +58,25 @@ WSGI_APPLICATION = "config.wsgi.application"
 #     }
 # }
 
-# ===== awsDB (Postgres) =====
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "mydb",
-#         "USER": "myo",
-#         "PASSWORD": "1234",
-#         "HOST": "43.201.27.175",
-#         "PORT": "5432",  # PostgreSQL 기본 포트
-#     }
-# }
+# ===== MongoDB (Djongo) =====/
+MONGO_DB   = os.getenv("MONGO_INITDB_DATABASE", "dbase")
+MONGO_HOST = os.getenv("MONGO_INITDB_HOST", "db")
+MONGO_PORT = int(os.getenv("MONGO_INITDB_PORT", "27017"))
+MONGO_USER = os.getenv("MONGO_INITDB_ROOT_USERNAME", "")
+MONGO_PASS = os.getenv("MONGO_INITDB_ROOT_PASSWORD", "")
 
-# # ===== MongoDB (Djongo) =====
 DATABASES = {
     "default": {
         "ENGINE": "djongo",
-        "NAME": os.getenv("MONGO_INITDB_DATABASE"),
+        "NAME": MONGO_DB,
         "CLIENT": {
-            "host": os.getenv("MONGOD_HOST", "13.209.97.212"),
-            "port": 27017,
-            "username": os.getenv("MONGO_INITDB_ROOT_USERNAME"),
-            "password": os.getenv("MONGO_INITDB_ROOT_PASSWORD"),
+            # Djongo/pymongo는 host 문자열 또는 host/port/username/password 모두 지원
+            # 인증 DB는 admin을 명시
+            "host": f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/",
             "authSource": "admin",
         },
     }
 }
-
-# Atlas 사용 시 (위 대신)
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "djongo",
-#         "NAME": os.getenv("MONGO_DB_NAME", "mydb"),
-#         "CLIENT": {
-#             "host": os.getenv("MONGO_URI", "mongodb+srv://USER:PASS@CLUSTER/mydb?retryWrites=true&w=majority"),
-#         },
-#     }
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -116,7 +99,6 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ===== CORS =====
-CORS_ALLOW_ALL_ORIGINS = False
 raw_cors = os.getenv("CORS_ALLOWED_ORIGINS", "")
 CORS_ALLOWED_ORIGINS = [c.strip() for c in raw_cors.split(",") if c.strip()]
 CORS_ALLOW_CREDENTIALS = True

@@ -46,44 +46,20 @@ TEMPLATES = [{
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": os.getenv("POSTGRES_DB"),
-#         "USER": os.getenv("POSTGRES_USER"),
-#         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-#         "HOST": os.getenv("DB_HOST", "my_postgres_db"),
-#         "PORT": os.getenv("DB_PORT", "5432"),
-#     }
-# }
-
-# ===== awsDB (Postgres) =====
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "mydb",
-#         "USER": "myo",
-#         "PASSWORD": "1234",
-#         "HOST": "43.201.27.175",
-#         "PORT": "5432",  # PostgreSQL 기본 포트
-#     }
-# }
-
-# # ===== MongoDB (Djongo) =====
+# ===== PostgreSQL =====
 DATABASES = {
     "default": {
-        "ENGINE": "djongo",
-        "NAME": os.getenv("MONGO_INITDB_DATABASE"),
-        "CLIENT": {
-            "host": os.getenv("MONGOD_HOST", "13.209.97.212"),
-            "port": 27017,
-            "username": os.getenv("MONGO_INITDB_ROOT_USERNAME"),
-            "password": os.getenv("MONGO_INITDB_ROOT_PASSWORD"),
-            "authSource": "admin",
-        },
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("DB_HOST", "my_postgres_db"),
+        "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
 
+
+# ===== MongoDB (Djongo) =====/
 # Atlas 사용 시 (위 대신)
 # DATABASES = {
 #     "default": {
@@ -116,7 +92,6 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ===== CORS =====
-CORS_ALLOW_ALL_ORIGINS = False
 raw_cors = os.getenv("CORS_ALLOWED_ORIGINS", "")
 CORS_ALLOWED_ORIGINS = [c.strip() for c in raw_cors.split(",") if c.strip()]
 CORS_ALLOW_CREDENTIALS = True

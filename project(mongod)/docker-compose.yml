@@ -1,4 +1,20 @@
 services:
+  # 1. PostgreSQL 데이터베이스 서비스
+#  db:
+#    image: postgres:14
+#    container_name: my_postgres_db
+#    restart: always
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    env_file:
+#      - ./.env
+#    ports:
+#      - "5432:5432"
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
   # 1. MongoD 데이터베이스 서비스
   db:
     image: mongo:6
@@ -9,11 +25,13 @@ services:
     env_file:
       - ./.env
     healthcheck:
-      test: [ "CMD-SHELL", "mongosh --quiet -u $${MONGOD_USER} -p $${MONGOD_PASSWORD} --eval 'db.runCommand({ ping: 1 })' admin | grep ok" ]
+      test: [
+        "CMD",
+        "mongosh \"$${MONGO_URL}\" --quiet --eval 'quit((db.runCommand({ping:1}).ok==1)?0:2)'"
+      ]
       interval: 5s
       timeout: 5s
       retries: 20
-
   # 2. Django 백엔드 서비스
   backend:
     build:
@@ -43,4 +61,4 @@ services:
       - backend
 
 volumes:
-  postgres_data:
+  mongodata:
